@@ -1,0 +1,63 @@
+=== Lab 1 · sonda Chaos A ===
+PGHOST=crdb-1,crdb-2,crdb-3
+Fila objetivo: ti4601_raft.public.raft_probe(id=1), RF=3
+Señal de falla: evidence/chaos-a-stop.epoch
+2026-09-02T17:37:40.543+00:00 before-stop ok      12.672 ms 
+2026-09-02T17:37:41.039+00:00 before-stop ok       8.307 ms 
+2026-09-02T17:37:41.538+00:00 before-stop ok       7.953 ms 
+2026-09-02T17:37:42.039+00:00 before-stop ok       8.216 ms 
+2026-09-02T17:37:42.539+00:00 before-stop ok       8.503 ms 
+2026-09-02T17:37:43.041+00:00 before-stop ok      10.346 ms 
+2026-09-02T17:37:43.539+00:00 before-stop ok       8.550 ms 
+2026-09-02T17:37:44.039+00:00 before-stop ok       7.733 ms 
+2026-09-02T17:37:44.539+00:00 before-stop ok       8.496 ms 
+2026-09-02T17:37:45.039+00:00 before-stop ok       7.621 ms 
+2026-09-02T17:37:45.539+00:00 before-stop ok       8.399 ms 
+2026-09-02T17:37:46.046+00:00 before-stop ok      14.364 ms 
+2026-09-02T17:37:46.539+00:00 before-stop ok       8.086 ms 
+2026-09-02T17:37:47.039+00:00 before-stop ok       7.705 ms 
+2026-09-02T17:37:49.539+00:00 after-stop  error 2007.595 ms QueryCanceled: query execution canceled due to statement timeout
+2026-09-02T17:37:51.549+00:00 after-stop  error 2009.220 ms QueryCanceled: query execution canceled due to statement timeout
+2026-09-02T17:37:51.559+00:00 after-stop  ok      10.235 ms 
+2026-09-02T17:37:52.059+00:00 after-stop  ok       9.888 ms 
+2026-09-02T17:37:52.558+00:00 after-stop  ok       9.370 ms 
+2026-09-02T17:37:53.058+00:00 after-stop  ok       9.084 ms 
+2026-09-02T17:37:53.559+00:00 after-stop  ok       9.522 ms 
+2026-09-02T17:37:54.059+00:00 after-stop  ok       9.716 ms 
+2026-09-02T17:37:54.559+00:00 after-stop  ok       9.519 ms 
+2026-09-02T17:37:55.058+00:00 after-stop  ok       8.902 ms 
+2026-09-02T17:37:55.562+00:00 after-stop  ok      12.252 ms 
+2026-09-02T17:37:56.060+00:00 after-stop  ok       9.951 ms 
+2026-09-02T17:37:56.559+00:00 after-stop  ok       9.641 ms 
+2026-09-02T17:37:57.060+00:00 after-stop  ok       9.816 ms 
+2026-09-02T17:37:57.576+00:00 after-stop  ok      26.038 ms 
+2026-09-02T17:37:58.061+00:00 after-stop  ok      11.508 ms 
+2026-09-02T17:37:58.560+00:00 after-stop  ok       9.721 ms 
+2026-09-02T17:37:59.058+00:00 after-stop  ok       8.121 ms 
+2026-09-02T17:37:59.558+00:00 after-stop  ok       8.386 ms 
+2026-09-02T17:38:00.059+00:00 after-stop  ok       8.560 ms 
+2026-09-02T17:38:00.559+00:00 after-stop  ok       9.181 ms 
+2026-09-02T17:38:01.058+00:00 after-stop  ok       8.040 ms 
+2026-09-02T17:38:01.559+00:00 after-stop  ok       8.074 ms 
+2026-09-02T17:38:02.058+00:00 after-stop  ok       7.875 ms 
+2026-09-02T17:38:02.559+00:00 after-stop  ok       8.543 ms 
+2026-09-02T17:38:03.066+00:00 after-stop  ok      15.447 ms 
+2026-09-02T17:38:03.559+00:00 after-stop  ok       8.131 ms 
+2026-09-02T17:38:04.059+00:00 after-stop  ok       7.737 ms 
+2026-09-02T17:38:04.559+00:00 after-stop  ok       8.110 ms 
+2026-09-02T17:38:05.059+00:00 after-stop  ok       8.256 ms 
+2026-09-02T17:38:05.559+00:00 after-stop  ok       8.351 ms 
+2026-09-02T17:38:06.059+00:00 after-stop  ok       8.021 ms 
+2026-09-02T17:38:06.559+00:00 after-stop  ok       8.216 ms 
+2026-09-02T17:38:07.059+00:00 after-stop  ok       7.802 ms 
+2026-09-02T17:38:07.562+00:00 after-stop  ok      10.199 ms 
+2026-09-02T17:38:08.059+00:00 after-stop  ok       7.654 ms 
+2026-09-02T17:38:08.560+00:00 after-stop  ok       8.037 ms 
+2026-09-02T17:38:09.059+00:00 after-stop  ok       7.588 ms 
+2026-09-02T17:38:09.565+00:00 after-stop  ok      13.305 ms 
+2026-09-02T17:38:10.060+00:00 after-stop  ok       7.893 ms 
+
+Muestras: evidence/chaos-a.csv
+Errores después de la señal: 2
+RTO observado hasta primer write OK: 4037.6 ms
+RPO se verifica después: la fila committed anterior debe seguir presente y su version no debe retroceder.

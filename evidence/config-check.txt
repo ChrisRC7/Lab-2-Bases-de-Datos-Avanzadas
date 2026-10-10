@@ -1,0 +1,11 @@
+docker compose --profile lab1 run --rm --no-deps app-crdb \
+	python3 labs/lab1-cluster/verify_cluster.py
+[ OK ] tres nodos/localities vivos
+[ OK ] tres regiones configuradas
+[ OK ] catalogo_producto es GLOBAL
+[ OK ] pedido es REGIONAL BY ROW
+[ OK ] hay una fila pedido por región
+[ OK ] raft_probe tiene tres votantes
+
+Resultado: 6/6 verificaciones.
+Configuración lista para mediciones y Chaos A.

@@ -1,0 +1,27 @@
+# Guía corta — entorno + labs
+
+## Semana 2 (hoy: smoke, no Lab 0)
+
+1. `make up` + `make build`.  
+2. Verificar a mano (README raíz):
+
+```bash
+docker compose exec -T postgres pg_isready -U ti4601 -d ti4601
+docker compose run --rm app python3 transactions/answer.py
+```
+
+3. Teoría de aislamiento en clase (prerreq Lab 0).  
+4. Lab 0 se ejecuta en **S3** y **cuenta** (2,5 %): `labs/lab0-concurrency/README.md`.
+
+## Después
+
+| Semana | Qué |
+| --- | --- |
+| S3 | Lab 0 calificado (2,5 %) |
+| S4 | Kickoff P1 + shard key |
+| S5 | Lab 1: `labs/lab1-cluster/` |
+| S9 | Lab 2: `labs/lab2-one-size/` (Postgres + Valkey; `make lab2-up`) |
+
+Índice: `labs/README.md` · Guía ejecutable: `labs/lab1-cluster/README.md`.
+
+Reset Postgres: `make down-v && make up`.

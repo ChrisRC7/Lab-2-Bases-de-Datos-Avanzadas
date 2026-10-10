@@ -1,0 +1,12 @@
+=== Lab 1 · gateway=crdb-1 · warmup=5 · n=50 ===
+Región del gateway: cr-sj
+
+operation locality home_region n p50_ms p99_ms
+read      local    cr-sj       50   0.690   1.934
+read      remote   cr-limon    50   1.460   1.698
+write     local    cr-sj       50   7.067  12.713
+write     remote   cr-limon    50   6.072  11.792
+
+Muestras crudas: evidence/latency.csv
+
+Nota: Docker corre las tres regiones en una sola máquina. Un ratio local/remoto cercano a 1 no invalida el experimento.

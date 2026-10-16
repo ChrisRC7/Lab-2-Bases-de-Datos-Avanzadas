@@ -54,7 +54,11 @@ def medir_espacio_postgres(cur) -> tuple[int, int, int]:
     #   b) Lea la única fila con cur.fetchone(); es una tupla de tres enteros.
     #   c) Devuélvala tal cual. Las unidades son bytes; cargar_postgres() la pasa a MiB.
     # Verificación automática: total >= heap + índices, y ambos > 0.
-    raise NotImplementedError("TODO 1: medir_espacio_postgres()")
+    cur.execute(
+        "SELECT pg_relation_size('trips'), pg_indexes_size('trips'),"
+        " pg_total_relation_size('trips')"
+    )
+    return cur.fetchone()
 
 
 def cargar_postgres(limit: int | None) -> int:

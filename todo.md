@@ -11,8 +11,9 @@
 - [ ] Leer el paper de Stonebraker et al. ("One Size Fits All") y el `README.md` del lab.
 - [ ] Leer `common.py` (lector del CSV, conexiones, registro de medidas, cronómetro).
 - [ ] Escribir la **predicción previa** de cada paso (¿quién gana y por cuánto?) **antes** de correr nada (vale en la rúbrica).
-- [ ] Levantar el entorno: `make build` y `make lab2-up`.
-- [ ] Descargar el dataset: `docker compose run --rm app python3 labs/lab2-one-size/descargar.py`
+      Paso 1 listo en `labs/lab2-one-size/evidence/predicciones.md`; faltan los pasos 2 y 3.
+- [x] Levantar el entorno: `make build` y `make lab2-up`.
+- [x] Descargar el dataset: `docker compose run --rm app python3 labs/lab2-one-size/descargar.py`
       (si falla, usar el CLI de Kaggle hacia `labs/lab2-one-size/data/`).
 - [ ] Acordar en qué máquina se corren las mediciones finales y anotar máquina, SO, RAM y perfil
       (completo / reducido) en `evidence/README.md`.
@@ -23,20 +24,21 @@
 ## Persona 1 — Paso 1: Carga y espacio (`cargar.py`)
 
 ### Código
-- [ ] **TODO 1** — `medir_espacio_postgres(cur)`: `SELECT` con `pg_relation_size`, `pg_indexes_size`
+- [x] **TODO 1** — `medir_espacio_postgres(cur)`: `SELECT` con `pg_relation_size`, `pg_indexes_size`
       y `pg_total_relation_size` para `'trips'`; retornar la fila.
-- [ ] **TODO 2** — `cargar_valkey(r, limit)`: guardar los viajes con `HSET` en un **pipeline**
+- [x] **TODO 2** — `cargar_valkey(r, limit)`: guardar los viajes con `HSET` en un **pipeline**
       (lotes + `execute()`), llave `trip:<id>`.
-- [ ] Correr `cargar.py` (o `--perfil reducido` si hay < 8 GB de RAM) y guardar la salida con las líneas `OK:`.
+- [x] Correr `cargar.py` (o `--perfil reducido` si hay < 8 GB de RAM) y guardar la salida con las líneas `OK:`.
 
 ### Análisis para el informe
-- [ ] Explicar qué tienen en común `COPY` (Postgres) y el pipeline (Valkey) y cómo resuelven el overhead de carga masiva.
-- [ ] Explicar por qué el pipeline cambia el tiempo (viajes de ida y vuelta por la red).
-- [ ] Responder qué pasa si el TODO 1 falla después del `COPY`.
-- [ ] Comparar `bytes_por_fila` de cada motor y `ram_extrapolada_total` vs `disco_total`.
-- [ ] Responder: ¿cuál motor podría guardar un año entero en una laptop?
+- [x] Explicar qué tienen en común `COPY` (Postgres) y el pipeline (Valkey) y cómo resuelven el overhead de carga masiva.
+- [x] Explicar por qué el pipeline cambia el tiempo (viajes de ida y vuelta por la red).
+- [x] Responder qué pasa si el TODO 1 falla después del `COPY`.
+- [x] Comparar `bytes_por_fila` de cada motor y `ram_extrapolada_total` vs `disco_total`.
+- [x] Responder: ¿cuál motor podría guardar un año entero en una laptop?
 - [ ] **Ensayo final:** redactar la apreciación **«Ningún motor gana todas las cargas de trabajo»**
       (en qué paso gana cada uno y por cuántas veces, limitantes de Valkey), con números de los 3 pasos.
+      Borrador en `labs/lab2-one-size/evidence/paso1.md`; faltan los números de los pasos 2 y 3.
 
 ---
 

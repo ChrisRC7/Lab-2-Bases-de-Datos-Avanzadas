@@ -28,5 +28,15 @@ local umbral = tonumber(ARGV[5])
 --            y devuelva 1
 --   d) En cualquier otro caso, devuelva 0.
 -- Verificación automática: las tres variantes de Valkey dan los mismos conteos y
--- alertas que Postgres. Borre la línea siguiente cuando termine.
-return redis.error_reply('TODO 4: lua/feed.lua sin implementar')
+-- alertas que Postgres.
+redis.call('HINCRBY', 'agg:n', pt, 1)
+redis.call('HINCRBYFLOAT', 'agg:suma', pt, fare)
+
+if anom == '1' then
+    local anomalias = redis.call('HINCRBY', 'alarma:anomalias', vendor, 1)
+    if anomalias % umbral == 0 then
+        redis.call('HINCRBY', 'alarma:alertas', vendor, 1)
+        return 1
+    end
+end
+return 0

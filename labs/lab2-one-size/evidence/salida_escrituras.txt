@@ -1,0 +1,25 @@
+3a: 2000 lecturas y updates por llave
+  [3a-puntual] postgres                     lectura_por_llave_p50               0.155 ms
+  [3a-puntual] postgres                     update_por_llave_p50                1.751 ms
+  [3a-puntual] valkey                       lectura_por_llave_p50               0.227 ms
+  [3a-puntual] valkey                       update_por_llave_p50                0.124 ms
+3b: feed de 10,000 mensajes
+  esperado: 7 alertas, conteos {'1': 6047, '2': 3892, '3': 47, '4': 14}
+  [3b-feed] postgres_commit_por_mensaje  mensajes_por_s                    482.776 msg/s
+  [3b-feed] postgres_commit_por_mensaje  leer_respuesta                      0.394 ms
+  OK: postgres_commit_por_mensaje da la respuesta esperada
+  [3b-feed] postgres_commit_asincrono    mensajes_por_s                  6,074.086 msg/s
+  [3b-feed] postgres_commit_asincrono    leer_respuesta                      0.242 ms
+  OK: postgres_commit_asincrono da la respuesta esperada
+  [3b-feed] postgres_lote                mensajes_por_s                 12,393.852 msg/s
+  [3b-feed] postgres_lote                leer_respuesta                      0.600 ms
+  OK: postgres_lote da la respuesta esperada (TODO 5)
+  [3b-feed] valkey_por_mensaje           mensajes_por_s                  6,903.736 msg/s
+  [3b-feed] valkey_por_mensaje           leer_respuesta                      0.311 ms
+  OK: valkey_por_mensaje da la respuesta esperada (TODO 4)
+  [3b-feed] valkey_aof_always            mensajes_por_s                    212.327 msg/s
+  [3b-feed] valkey_aof_always            leer_respuesta                      0.569 ms
+  OK: valkey_aof_always da la respuesta esperada (TODO 4)
+  [3b-feed] valkey_pipeline              mensajes_por_s                 33,673.658 msg/s
+  [3b-feed] valkey_pipeline              leer_respuesta                      0.357 ms
+  OK: valkey_pipeline da la respuesta esperada (TODO 4)

@@ -12,3 +12,22 @@
 {"ts": "2026-10-16T02:44:39", "paso": "1-carga", "motor": "valkey", "metrica": "ram_usada", "valor": 523.896515, "unidad": "MiB"}
 {"ts": "2026-10-16T02:44:39", "paso": "1-carga", "motor": "valkey", "metrica": "bytes_por_fila", "valor": 549.345312, "unidad": "B/fila"}
 {"ts": "2026-10-16T02:44:39", "paso": "1-carga", "motor": "valkey", "metrica": "ram_extrapolada_total", "valor": 5714.064895, "unidad": "MiB", "nota": "extrapolado a 10906858 filas"}
+{"ts": "2026-10-17T04:23:35", "paso": "1-carga", "motor": "postgres", "metrica": "filas", "valor": 10906858, "unidad": "filas"}
+{"ts": "2026-10-17T04:23:35", "paso": "1-carga", "motor": "postgres", "metrica": "tiempo_copy", "valor": 31.849565, "unidad": "s"}
+{"ts": "2026-10-17T04:23:35", "paso": "1-carga", "motor": "postgres", "metrica": "filas_por_s", "valor": 342449.200006, "unidad": "filas/s"}
+{"ts": "2026-10-17T04:23:38", "paso": "1-carga", "motor": "postgres", "metrica": "tiempo_indice_pk", "valor": 3.668355, "unidad": "s"}
+{"ts": "2026-10-17T04:23:41", "paso": "1-carga", "motor": "postgres", "metrica": "disco_tabla", "valor": 1653.5625, "unidad": "MiB"}
+{"ts": "2026-10-17T04:23:41", "paso": "1-carga", "motor": "postgres", "metrica": "disco_indices", "valor": 233.65625, "unidad": "MiB"}
+{"ts": "2026-10-17T04:23:41", "paso": "1-carga", "motor": "postgres", "metrica": "disco_total", "valor": 1887.703125, "unidad": "MiB"}
+{"ts": "2026-10-17T04:23:41", "paso": "1-carga", "motor": "postgres", "metrica": "bytes_por_fila", "valor": 181.482164, "unidad": "B/fila"}
+{"ts": "2026-10-17T04:24:15", "paso": "1-carga", "motor": "valkey", "metrica": "filas", "valor": 1000000, "unidad": "filas"}
+{"ts": "2026-10-17T04:24:15", "paso": "1-carga", "motor": "valkey", "metrica": "tiempo_carga", "valor": 34.73934, "unidad": "s"}
+{"ts": "2026-10-17T04:24:15", "paso": "1-carga", "motor": "valkey", "metrica": "filas_por_s", "valor": 28785.808534, "unidad": "filas/s"}
+{"ts": "2026-10-17T04:24:15", "paso": "1-carga", "motor": "valkey", "metrica": "ram_usada", "valor": 523.899506, "unidad": "MiB"}
+{"ts": "2026-10-17T04:24:15", "paso": "1-carga", "motor": "valkey", "metrica": "bytes_por_fila", "valor": 549.348448, "unidad": "B/fila"}
+{"ts": "2026-10-17T04:24:15", "paso": "1-carga", "motor": "valkey", "metrica": "ram_extrapolada_total", "valor": 5714.097514, "unidad": "MiB", "nota": "extrapolado a 10906858 filas"}
+{"ts": "2026-10-17T04:26:16", "paso": "2-olap", "motor": "valkey", "metrica": "agregado_en_cliente", "valor": 8282.334602, "unidad": "ms", "filas": 1000000}
+{"ts": "2026-10-17T04:26:19", "paso": "2-olap", "motor": "postgres", "metrica": "explain_execution_time", "valor": 1615.569, "unidad": "ms", "filas": 10906858}
+{"ts": "2026-10-17T04:26:26", "paso": "2-olap", "motor": "postgres", "metrica": "mediana_completa", "valor": 1481.82076, "unidad": "ms", "filas": 10906858}
+{"ts": "2026-10-17T04:26:27", "paso": "2-olap", "motor": "postgres", "metrica": "mediana_subconjunto", "valor": 107.857832, "unidad": "ms", "filas": 1000000}
+{"ts": "2026-10-17T04:26:28", "paso": "2-olap", "motor": "postgres", "metrica": "pregunta_nueva", "valor": 1658.573332, "unidad": "ms", "filas": 10906858}

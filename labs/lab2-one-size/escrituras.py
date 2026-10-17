@@ -140,7 +140,9 @@ def enviar_en_lotes(conn, msgs: list[Message], batch: int) -> None:
     #      lo calcula el trigger por su cuenta.
     # Verificación automática: postgres_lote da la misma respuesta que las demás.
     # Compare enviar_uno_por_uno(): la única diferencia es dónde termina la transacción.
-    raise NotImplementedError("TODO 5: enviar_en_lotes()")
+    for i in range(0, len(msgs), batch):
+        with conn.transaction(), conn.cursor() as cur:
+            cur.executemany(INSERT, [m[:4] for m in msgs[i:i + batch]])
 
 
 def feed_postgres(msgs: list[Message], variant: str, batch: int, umbral: int) -> dict:

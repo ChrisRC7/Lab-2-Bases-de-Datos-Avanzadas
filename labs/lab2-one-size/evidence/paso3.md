@@ -162,7 +162,23 @@ rápido. Y cuando a Valkey se le pide la misma durabilidad, pierde.
 
 ## Count100 exacto del paper (opcional)
 
-*Pendiente: se completa con `salida_escrituras_count100.txt`.*
+`escrituras.py --solo-feed --umbral 100 --mensajes 50000`. Salida en `salida_escrituras_count100.txt`;
+estas medidas no se dejaron en `resultados.jsonl` para que `graficas.py` use la corrida por defecto.
+
+| Variante | Mensajes/s (50 000, umbral 100) | Mensajes/s (10 000, umbral 10) |
+| --- | ---: | ---: |
+| `postgres_commit_por_mensaje` | 531 | 483 |
+| `postgres_commit_asincrono` | 6 145 | 6 074 |
+| `postgres_lote` | 17 447 | 12 394 |
+| `valkey_por_mensaje` | 6 755 | 6 904 |
+| `valkey_aof_always` | 266 | 212 |
+| `valkey_pipeline` | 33 536 | 33 674 |
+
+Las seis dan 4 alertas y los mismos conteos. Las conclusiones no cambian: con durabilidad gana Postgres
+(2,0×), sin disco Valkey gana por poco (1,10×) y con lotes Valkey gana 1,9×. Con más mensajes
+`postgres_lote` mejora (los costos fijos de cada variante pesan menos) y la brecha de modelo se achica
+de 2,7× a 1,9×. La brecha máxima (`valkey_pipeline` contra `postgres_commit_por_mensaje`) es de 63×,
+lejos de los 178× del paper (160 000 contra 900).
 
 ## Borrador del ensayo: «La brecha no es solo el overhead de `fsync()`»
 

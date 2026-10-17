@@ -26,7 +26,25 @@ Fabricio Mena · 15/10/2026, 18:34 · perfil completo (10 906 858 filas en Postg
 
 ## Paso 2: consulta de almacén
 
-*Pendiente (Persona 2).*
+
+**Alisson Redondo Moya — Análisis retrospectivo de la expectativa teórica.**
+
+*Nota: esta estimación se documentó después de ejecutar el Paso 2, por lo que no constituye una predicción registrada previamente.*
+
+| Métrica | PostgreSQL | Valkey | Ventaja esperada |
+| --- | --- | --- | --- |
+| `GROUP BY` sobre el mismo subconjunto | Menor tiempo | Mayor tiempo | PostgreSQL |
+| Consulta ad hoc no anticipada | Consulta SQL directa | Requiere procesamiento adicional en el cliente | PostgreSQL |
+
+Se esperaba que PostgreSQL tuviera una ventaja considerable en la consulta analítica debido a que dispone de primitivas de agregación dentro del motor. Su optimizador puede seleccionar un plan paralelo y calcular agrupaciones parciales sin enviar todas las filas al cliente.
+
+En cambio, Valkey es un almacén clave-valor y no dispone de una operación equivalente a `GROUP BY`. Para obtener el mismo resultado, el cliente debe recorrer las llaves con `SCAN`, recuperar los campos necesarios mediante `HMGET` y realizar manualmente las sumas y los conteos.
+
+También se esperaba que PostgreSQL tuviera ventaja para responder preguntas no anticipadas, ya que SQL permite definir nuevas agrupaciones y filtros sin modificar previamente el esquema. Esto coincide con las características de las consultas ad hoc descritas por Stonebraker y Çetintemel en la sección 2 del paper.
+
+**Comparación posterior con las mediciones:** PostgreSQL obtuvo una mediana de 107,858 ms sobre el mismo subconjunto que Valkey, mientras que Valkey necesitó 8282,335 ms. La ventaja observada fue de aproximadamente 76,8 veces a favor de PostgreSQL.
+
+Estos resultados corresponden a la ejecución preliminar de Persona 2 y deberán revisarse con las mediciones finales del equipo.
 
 ## Paso 3: escrituras y feed
 

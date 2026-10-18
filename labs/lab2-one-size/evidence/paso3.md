@@ -1,14 +1,10 @@
 # Paso 3: escrituras y feed
 
-Laptop Intel Core i7-6500U (2 núcleos, 4 hilos), 11 GiB de RAM, SSD SATA Patriot P210 · Ubuntu 24.04
-nativo, kernel 7.0 · Docker 29.8.2 · perfil completo (10 906 858 filas en Postgres, 1 000 000 en
-Valkey) · 16/10/2026.
+Corrida final del 17/10/2026 en la máquina de `README.md` (Ryzen 7 5700U, WSL 2), perfil completo
+(10 906 858 filas en Postgres, 1 000 000 en Valkey).
 
 Parámetros por defecto: 2 000 operaciones por llave (semilla 4601), 10 000 mensajes, lote de 1 000,
 umbral 10. Salida completa con las líneas `OK:` de las seis variantes en `salida_escrituras.txt`.
-
-*Nota: el paso 1 se midió en la laptop de Fabricio y este paso en la de Christopher. Si el equipo
-acuerda una sola máquina para las medidas finales, hay que repetir este paso allí.*
 
 ## Código
 
@@ -49,49 +45,52 @@ Cada tramo de 1 000 mensajes es una transacción: un solo commit y una sola espe
 
 | Métrica (mediana de 2 000) | Postgres | Valkey | Gana |
 | --- | ---: | ---: | --- |
-| Lectura por llave | 0,155 ms | 0,227 ms | Postgres, 1,5× |
-| Update por llave | 1,751 ms | 0,124 ms | Valkey, 14,1× |
+| Lectura por llave | 0,341 ms | 0,316 ms | Valkey, 1,08× (casi empate) |
+| Update por llave | 2,280 ms | 0,258 ms | Valkey, 8,8× |
 
-**Lectura.** Aquí la predicción falló: esperábamos que ganara Valkey y ganó Postgres. En el servidor los
-dos hacen muy poco (Postgres baja por el B-tree de la llave primaria, que ya está en el *buffer cache*;
-Valkey busca la llave en su tabla hash), así que lo que se mide es sobre todo el cliente. `HGETALL`
-devuelve 38 strings (19 campos y 19 valores) y redis-py los parsea en Python puro, porque la imagen no
-trae `hiredis`. psycopg usa su implementación en C (`psycopg.pq.__impl__ == "binary"`) para leer la fila.
+**Lectura.** La predicción esperaba Valkey ~1,5× arriba y salió casi empate. En el servidor los dos
+hacen muy poco (Postgres baja por el B-tree de la llave primaria, que ya está en el *buffer cache*;
+Valkey busca la llave en su tabla hash), así que lo que se mide es sobre todo el viaje por la red y el
+cliente. `HGETALL` devuelve 38 strings (19 campos y 19 valores) y redis-py los parsea en Python puro,
+porque la imagen no trae `hiredis`. psycopg usa su implementación en C para leer la fila.
 
 **Update.** Con autocommit cada `UPDATE` de Postgres es una transacción, y el commit no responde hasta que
-el WAL llega a disco con `fsync`. El update tarda 1,6 ms más que la lectura, y casi todo eso es esperar
+el WAL llega a disco con `fsync`. El update tarda 1,9 ms más que la lectura, y casi todo eso es esperar
 al disco: es el precio de la **D** de ACID. Valkey, con `--appendonly no`, cambia el valor en RAM y
-responde; por eso su update (0,124 ms) es incluso más rápido que su lectura, porque devuelve un solo
+responde; por eso su update (0,258 ms) es incluso más rápido que su lectura, porque devuelve un solo
 número en vez de 38 strings.
 
 ## 3b. El feed
 
 | Variante | Mensajes/s | ms por mensaje | ¿Espera al disco por mensaje? |
 | --- | ---: | ---: | --- |
-| `postgres_commit_por_mensaje` | 483 | 2,071 | Sí (WAL) |
-| `postgres_commit_asincrono` | 6 074 | 0,165 | No |
-| `postgres_lote` | 12 394 | 0,081 | Una vez por lote |
-| `valkey_por_mensaje` | 6 904 | 0,145 | No |
-| `valkey_aof_always` | 212 | 4,710 | Sí (AOF) |
-| `valkey_pipeline` | 33 674 | 0,030 | No |
+| `postgres_commit_por_mensaje` | 486 | 2,059 | Sí (WAL) |
+| `postgres_commit_asincrono` | 1 847 | 0,541 | No |
+| `postgres_lote` | 29 792 | 0,034 | Una vez por lote |
+| `valkey_por_mensaje` | 2 336 | 0,428 | No |
+| `valkey_aof_always` | 240 | 4,167 | Sí (AOF) |
+| `valkey_pipeline` | 51 040 | 0,020 | No |
 
 Las seis variantes dan 7 alertas y los mismos conteos por tipo de pago (`{'1': 6047, '2': 3892, '3': 47,
 '4': 14}`), así que todas hacen el mismo trabajo lógico.
 
 ### Predicción contra lo medido
 
+La predicción se hizo pensando en la laptop de Christopher; la corrida final fue en la de Fabricio.
+
 | Variante | Predicción | Medido |
 | --- | ---: | ---: |
-| `postgres_commit_por_mensaje` | ~400 | 483 |
-| `postgres_commit_asincrono` | ~3 000 | 6 074 |
-| `postgres_lote` | ~6 000 | 12 394 |
-| `valkey_por_mensaje` | ~7 000 | 6 904 |
-| `valkey_aof_always` | ~500 | 212 |
-| `valkey_pipeline` | ~50 000 | 33 674 |
+| `postgres_commit_por_mensaje` | ~400 | 486 |
+| `postgres_commit_asincrono` | ~3 000 | 1 847 |
+| `postgres_lote` | ~6 000 | 29 792 |
+| `valkey_por_mensaje` | ~7 000 | 2 336 |
+| `valkey_aof_always` | ~500 | 240 |
+| `valkey_pipeline` | ~50 000 | 51 040 |
 
-Postgres sin `fsync` resultó el doble de rápido de lo que estimamos: el trigger en PL/pgSQL y los dos
-*upserts* cuestan menos de lo que pensábamos. La sorpresa es `valkey_aof_always`, que esperábamos un
-poco por encima de Postgres y quedó 2,3 veces por debajo (se explica abajo).
+Las variantes que hacen un viaje de red por mensaje (`commit_asincrono` y `valkey_por_mensaje`) salieron
+más lentas de lo previsto: en esta máquina cada viaje por la red de Docker en WSL 2 cuesta más. Las
+variantes por lotes salieron igual o mucho más rápidas. La sorpresa es `valkey_aof_always`, que
+esperábamos un poco por encima de Postgres y quedó 2,0 veces por debajo (se explica abajo).
 
 ### ¿Por qué el lote (TODO 5) y el pipeline cambian el tiempo?
 
@@ -99,14 +98,14 @@ Los dos atacan un costo fijo que se paga por cada envío y no por cada mensaje.
 
 - **El lote de Postgres quita esperas al disco.** `postgres_commit_por_mensaje` hace 10 000 commits y
   cada uno espera un `fsync` del WAL. `postgres_lote` hace 10: el trigger corre igual para cada fila, pero
-  el disco se espera una vez cada 1 000 mensajes. Pasa de 483 a 12 394 msg/s, 25,7 veces más. Además,
+  el disco se espera una vez cada 1 000 mensajes. Pasa de 486 a 29 792 msg/s, 61 veces más. Además,
   `executemany` de psycopg 3 manda las filas en modo *pipeline* de libpq, sin esperar la respuesta de
-  cada `INSERT`; por eso el lote supera también a `commit_asincrono` (2,0×), que ya no esperaba al disco
+  cada `INSERT`; por eso el lote supera también a `commit_asincrono` (16×), que ya no esperaba al disco
   pero sí hacía un viaje de red por mensaje.
 - **El pipeline de Valkey quita viajes de red.** `valkey_por_mensaje` no toca el disco, así que lo único
   que lo frena es esperar la respuesta de cada `EVALSHA` antes de mandar el siguiente: 10 000 viajes de
   ida y vuelta. El pipeline manda 1 000 llamadas juntas y recibe 1 000 respuestas juntas: 10 viajes.
-  Pasa de 6 904 a 33 674 msg/s, 4,9 veces más. Valkey hace exactamente el mismo trabajo; se ahorra la
+  Pasa de 2 336 a 51 040 msg/s, 22 veces más. Valkey hace exactamente el mismo trabajo; se ahorra la
   espera.
 
 Es la misma idea del paso 1 (`COPY` y el pipeline de `HSET`): no pagar el costo fijo por cada fila.
@@ -134,31 +133,30 @@ cuesta el `fsync` por mensaje en cada motor:
 
 | | Con `fsync` por mensaje | Sin `fsync` | Costo del `fsync` |
 | --- | ---: | ---: | ---: |
-| Postgres | 2,071 ms (483 msg/s) | 0,165 ms (6 074 msg/s) | 1,906 ms (92 % del tiempo) |
-| Valkey | 4,710 ms (212 msg/s) | 0,145 ms (6 904 msg/s) | 4,565 ms (97 % del tiempo) |
+| Postgres | 2,059 ms (486 msg/s) | 0,541 ms (1 847 msg/s) | 1,518 ms (74 % del tiempo) |
+| Valkey | 4,167 ms (240 msg/s) | 0,428 ms (2 336 msg/s) | 3,739 ms (90 % del tiempo) |
 
-- **Par con durabilidad** (`valkey_aof_always` vs `postgres_commit_por_mensaje`): **gana Postgres, 2,3×**.
+- **Par con durabilidad** (`valkey_aof_always` vs `postgres_commit_por_mensaje`): **gana Postgres, 2,0×**.
   Cuando los dos tienen que esperar al disco en cada mensaje, el modelo de Valkey no le sirve: el
-  `fsync` se come el 97 % de su tiempo. El suyo además es más caro (4,6 ms contra 1,9 ms). Una razón
-  medida: al activar `appendonly yes`, Valkey arranca una reescritura del AOF en segundo plano que vuelca
-  el millón de viajes a disco mientras corre el feed, y compite por el mismo SSD. Con una prueba aparte
-  (mismo script, mismos 10 000 mensajes) dio 184 msg/s durante la reescritura y 254 msg/s después, todavía
-  debajo de Postgres. Otra causa probable, que no medimos: el WAL de Postgres usa segmentos de 16 MiB ya
-  reservados, y el AOF es un archivo que crece, así que cada `fsync` también tiene que confirmar el tamaño
-  nuevo del archivo. Postgres lleva décadas optimizando justo ese camino; Valkey no está hecho para eso.
+  `fsync` se come el 90 % de su tiempo. El suyo además es más caro (3,7 ms contra 1,5 ms). Una razón: al
+  activar `appendonly yes`, Valkey arranca una reescritura del AOF en segundo plano que vuelca el millón
+  de viajes a disco mientras corre el feed, y compite por el mismo disco. Otra causa probable, que no
+  medimos: el WAL de Postgres usa segmentos de 16 MiB ya reservados, y el AOF es un archivo que crece,
+  así que cada `fsync` también tiene que confirmar el tamaño nuevo del archivo. Postgres lleva décadas
+  optimizando justo ese camino; Valkey no está hecho para eso.
 - **Par sin durabilidad** (`valkey_por_mensaje` vs `postgres_commit_asincrono`): **gana Valkey, pero
-  solo 1,14×** (6 904 contra 6 074). Sin disco, los dos quedan limitados por el viaje de red por mensaje
+  solo 1,26×** (2 336 contra 1 847). Sin disco, los dos quedan limitados por el viaje de red por mensaje
   y por el cliente de Python, que es igual para ambos. La diferencia de modelo (guardar la fila más el
-  trigger contra cuatro `HINCRBY` en RAM) es de solo 0,02 ms por mensaje.
-- **Sin red ni disco por mensaje** (`valkey_pipeline` vs `postgres_lote`): **Valkey, 2,7×** (33 674
-  contra 12 394). Aquí se ve mejor el modelo: con los costos fijos repartidos entre 1 000 mensajes,
-  Postgres gasta 0,081 ms por mensaje en guardarlo y disparar el trigger, y Valkey 0,030 ms en correr el
+  trigger contra cuatro `HINCRBY` en RAM) es de 0,11 ms por mensaje.
+- **Sin red ni disco por mensaje** (`valkey_pipeline` vs `postgres_lote`): **Valkey, 1,7×** (51 040
+  contra 29 792). Aquí se ve mejor el modelo: con los costos fijos repartidos entre 1 000 mensajes,
+  Postgres gasta 0,034 ms por mensaje en guardarlo y disparar el trigger, y Valkey 0,020 ms en correr el
   script.
 
-En esta laptop la mayor parte de la brecha entre la variante más lenta de Postgres y la más rápida de
-Valkey (483 contra 33 674 msg/s, 70×) es durabilidad: solo quitar el `fsync` multiplica Postgres por
-12,6. Pero no es toda: con el disco y la red repartidos, el modelo inbound sigue siendo 2,7 veces más
-rápido. Y cuando a Valkey se le pide la misma durabilidad, pierde.
+En esta máquina la brecha entre la variante más lenta de Postgres y la más rápida de Valkey es de 105×
+(486 contra 51 040 msg/s). Quitar el `fsync` multiplica Postgres solo por 3,8; agrupar los mensajes en
+lotes lo multiplica por otros 16; y lo que queda, 1,7×, es el modelo. Y cuando a Valkey se le pide la
+misma durabilidad, pierde.
 
 ## Count100 exacto del paper (opcional)
 
@@ -167,36 +165,34 @@ estas medidas no se dejaron en `resultados.jsonl` para que `graficas.py` use la 
 
 | Variante | Mensajes/s (50 000, umbral 100) | Mensajes/s (10 000, umbral 10) |
 | --- | ---: | ---: |
-| `postgres_commit_por_mensaje` | 531 | 483 |
-| `postgres_commit_asincrono` | 6 145 | 6 074 |
-| `postgres_lote` | 17 447 | 12 394 |
-| `valkey_por_mensaje` | 6 755 | 6 904 |
-| `valkey_aof_always` | 266 | 212 |
-| `valkey_pipeline` | 33 536 | 33 674 |
+| `postgres_commit_por_mensaje` | 499 | 486 |
+| `postgres_commit_asincrono` | 2 127 | 1 847 |
+| `postgres_lote` | 31 153 | 29 792 |
+| `valkey_por_mensaje` | 2 896 | 2 336 |
+| `valkey_aof_always` | 292 | 240 |
+| `valkey_pipeline` | 49 259 | 51 040 |
 
 Las seis dan 4 alertas y los mismos conteos. Las conclusiones no cambian: con durabilidad gana Postgres
-(2,0×), sin disco Valkey gana por poco (1,10×) y con lotes Valkey gana 1,9×. Con más mensajes
-`postgres_lote` mejora (los costos fijos de cada variante pesan menos) y la brecha de modelo se achica
-de 2,7× a 1,9×. La brecha máxima (`valkey_pipeline` contra `postgres_commit_por_mensaje`) es de 63×,
-lejos de los 178× del paper (160 000 contra 900).
+(1,7×), sin disco Valkey gana por poco (1,36×) y con lotes Valkey gana 1,6×. La brecha máxima
+(`valkey_pipeline` contra `postgres_commit_por_mensaje`) es de 99×, lejos de los 178× del paper
+(160 000 contra 900).
 
-## Borrador del ensayo: «La brecha no es solo el overhead de `fsync()`»
+## Ensayo: «La brecha no es solo el overhead de `fsync()`»
 
 En el paper, StreamBase procesó 160 000 mensajes por segundo y el RDBMS, 900, en la misma máquina
-(sección 3.2). La explicación fácil es que el RDBMS escribe a disco y el motor de streams no. Nuestras
+(sección 4). La explicación fácil es que el RDBMS escribe a disco y el motor de streams no. Nuestras
 mediciones del paso 3b permiten separar esa explicación en dos partes, porque comparan los dos motores
 en pares que esperan al disco igual.
 
-La durabilidad pesa mucho. En Postgres, el `fsync` del WAL cuesta 1,9 ms por mensaje, el 92 % del
-tiempo de `postgres_commit_por_mensaje` (483 msg/s). Solo con `synchronous_commit = off` sube a
-6 074 msg/s, 12,6 veces más, sin tocar el modelo. Y la durabilidad no es una ventaja de Valkey: con
-`appendfsync always`, Valkey baja a 212 msg/s y pierde contra Postgres por 2,3 veces. Cuando los dos
-garantizan la **D** en cada mensaje, el que gana es el que tiene la bitácora mejor optimizada, no el
-que procesa en memoria.
+La durabilidad pesa. En Postgres, el `fsync` del WAL cuesta 1,5 ms por mensaje, el 74 % del tiempo de
+`postgres_commit_por_mensaje` (486 msg/s). Solo con `synchronous_commit = off` sube a 1 847 msg/s, 3,8
+veces más, sin tocar el modelo. Y la durabilidad no es una ventaja de Valkey: con `appendfsync always`,
+Valkey baja a 240 msg/s y pierde contra Postgres por 2,0 veces. Cuando los dos garantizan la **D** en
+cada mensaje, el que gana es el que tiene la bitácora mejor optimizada, no el que procesa en memoria.
 
-Pero el `fsync` no explica todo. Con los dos sin esperar al disco, Valkey sigue arriba: 1,14× por
-mensaje, cuando la red y el cliente de Python son el cuello de botella, y 2,7× cuando esos costos se
-reparten en lotes de 1 000 (`valkey_pipeline` 33 674 contra `postgres_lote` 12 394). Esa diferencia
+Pero el `fsync` no explica todo. Con los dos sin esperar al disco, Valkey sigue arriba: 1,26× por
+mensaje, cuando la red y el cliente de Python son el cuello de botella, y 1,7× cuando esos costos se
+reparten en lotes de 1 000 (`valkey_pipeline` 51 040 contra `postgres_lote` 29 792). Esa diferencia
 es el modelo. Postgres procesa outbound: primero guarda el mensaje en `feed_trip` (versión de fila,
 heap, WAL) y después un trigger hace dos `INSERT … ON CONFLICT`. Valkey procesa inbound: el mensaje
 pasa por un script Lua dentro del servidor y solo quedan cuatro contadores. Es la diferencia que el
@@ -207,8 +203,6 @@ El paper también dice cómo resuelve StreamBase la durabilidad sin `fsync`: con
 réplicas en vez de una bitácora en disco (sección 4.4). Eso es justo lo que nuestro Valkey no tiene; con
 AOF, lo único que le queda es esperar al disco, y ahí pierde.
 
-En resumen: en nuestra laptop la mayor parte de la brecha de 70× entre `postgres_commit_por_mensaje`
-y `valkey_pipeline` viene de la durabilidad, pero una parte de 2,7× es del modelo y no desaparece al
-quitar el `fsync`. Ninguna de las dos partes por sí sola explica el resultado del paper.
-
-*Revisar los números de sección contra el PDF del paper antes de entregar.*
+En resumen: de la brecha de 105× entre `postgres_commit_por_mensaje` y `valkey_pipeline`, quitar el
+`fsync` explica solo 3,8×; agrupar los mensajes en lotes explica 16×, y el modelo deja 1,7× que no
+desaparece al quitar las dos cosas. Ninguna de las partes por sí sola explica el resultado del paper.

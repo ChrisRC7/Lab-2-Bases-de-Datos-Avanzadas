@@ -1,20 +1,20 @@
 3b: feed de 50,000 mensajes
   esperado: 4 alertas, conteos {'1': 28365, '2': 21233, '3': 296, '4': 106}
-  [3b-feed] postgres_commit_por_mensaje  mensajes_por_s                    530.806 msg/s
-  [3b-feed] postgres_commit_por_mensaje  leer_respuesta                      0.380 ms
+  [3b-feed] postgres_commit_por_mensaje  mensajes_por_s                    498.656 msg/s
+  [3b-feed] postgres_commit_por_mensaje  leer_respuesta                      1.013 ms
   OK: postgres_commit_por_mensaje da la respuesta esperada
-  [3b-feed] postgres_commit_asincrono    mensajes_por_s                  6,145.125 msg/s
-  [3b-feed] postgres_commit_asincrono    leer_respuesta                      0.254 ms
+  [3b-feed] postgres_commit_asincrono    mensajes_por_s                  2,127.460 msg/s
+  [3b-feed] postgres_commit_asincrono    leer_respuesta                      0.596 ms
   OK: postgres_commit_asincrono da la respuesta esperada
-  [3b-feed] postgres_lote                mensajes_por_s                 17,447.325 msg/s
-  [3b-feed] postgres_lote                leer_respuesta                      0.519 ms
+  [3b-feed] postgres_lote                mensajes_por_s                 31,152.606 msg/s
+  [3b-feed] postgres_lote                leer_respuesta                      0.987 ms
   OK: postgres_lote da la respuesta esperada (TODO 5)
-  [3b-feed] valkey_por_mensaje           mensajes_por_s                  6,754.938 msg/s
-  [3b-feed] valkey_por_mensaje           leer_respuesta                      0.375 ms
+  [3b-feed] valkey_por_mensaje           mensajes_por_s                  2,896.170 msg/s
+  [3b-feed] valkey_por_mensaje           leer_respuesta                      0.835 ms
   OK: valkey_por_mensaje da la respuesta esperada (TODO 4)
-  [3b-feed] valkey_aof_always            mensajes_por_s                    266.270 msg/s
-  [3b-feed] valkey_aof_always            leer_respuesta                      0.479 ms
+  [3b-feed] valkey_aof_always            mensajes_por_s                    292.309 msg/s
+  [3b-feed] valkey_aof_always            leer_respuesta                      0.711 ms
   OK: valkey_aof_always da la respuesta esperada (TODO 4)
-  [3b-feed] valkey_pipeline              mensajes_por_s                 33,536.272 msg/s
-  [3b-feed] valkey_pipeline              leer_respuesta                      0.355 ms
+  [3b-feed] valkey_pipeline              mensajes_por_s                 49,258.708 msg/s
+  [3b-feed] valkey_pipeline              leer_respuesta                      0.974 ms
   OK: valkey_pipeline da la respuesta esperada (TODO 4)

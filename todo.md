@@ -11,14 +11,15 @@
 - [ ] Leer el paper de Stonebraker et al. ("One Size Fits All") y el `README.md` del lab.
 - [ ] Leer `common.py` (lector del CSV, conexiones, registro de medidas, cronómetro).
 - [ ] Escribir la **predicción previa** de cada paso (¿quién gana y por cuánto?) **antes** de correr nada (vale en la rúbrica).
-      Pasos 1 y 3 listos en `labs/lab2-one-size/evidence/predicciones.md`; falta el paso 2.
+      Pasos 1 y 3 listos en `labs/lab2-one-size/evidence/predicciones.md`. La del paso 2 se escribió
+      después de correr; así se declara en el informe.
 - [x] Levantar el entorno: `make build` y `make lab2-up`.
 - [x] Descargar el dataset: `docker compose run --rm app python3 labs/lab2-one-size/descargar.py`
       (si falla, usar el CLI de Kaggle hacia `labs/lab2-one-size/data/`).
-- [ ] Acordar en qué máquina se corren las mediciones finales y anotar máquina, SO, RAM y perfil
+- [x] Acordar en qué máquina se corren las mediciones finales y anotar máquina, SO, RAM y perfil
       (completo / reducido) en `evidence/README.md`.
-      Ojo: el paso 1 se midió en la laptop de Fabricio (Ryzen 7 5700U, WSL 2) y el paso 3 en la de
-      Christopher (i7-6500U, Ubuntu nativo). Las dos están anotadas en `paso1.md` y `paso3.md`.
+      Corrida final en la laptop de Fabricio (Ryzen 7 5700U, WSL 2), anotada en
+      `labs/lab2-one-size/evidence/README.md`.
 - [ ] No cambiar firmas de funciones ni nombres de llaves de Valkey.
 
 ---
@@ -38,12 +39,9 @@
 - [x] Responder qué pasa si el TODO 1 falla después del `COPY`.
 - [x] Comparar `bytes_por_fila` de cada motor y `ram_extrapolada_total` vs `disco_total`.
 - [x] Responder: ¿cuál motor podría guardar un año entero en una laptop?
-- [ ] **Ensayo final:** redactar la apreciación **«Ningún motor gana todas las cargas de trabajo»**
+- [x] **Ensayo final:** redactar la apreciación **«Ningún motor gana todas las cargas de trabajo»**
       (en qué paso gana cada uno y por cuántas veces, limitantes de Valkey), con números de los 3 pasos.
-      Borrador en `labs/lab2-one-size/evidence/paso1.md`; faltan los números del paso 2.
-      Los del paso 3 ya están en `paso3.md`. Ojo: en 3a la lectura por llave la ganó Postgres
-      (0,155 ms contra 0,227 ms) y Valkey solo ganó el update (0,124 ms contra 1,751 ms); con
-      `appendfsync always` Valkey bajó a 212 msg/s.
+      En `labs/lab2-one-size/evidence/paso1.md`, con los números de la corrida final.
 
 ---
 
@@ -89,17 +87,16 @@
 - [x] **Ensayo final:** redactar la apreciación **«La brecha no es solo el overhead de `fsync()`»**:
       separar con los dos pares (`valkey_aof_always` vs `postgres_commit_por_mensaje` y
       `valkey_por_mensaje` vs `postgres_commit_asincrono`) qué parte es durabilidad y qué parte es modelo.
-      Borrador en `labs/lab2-one-size/evidence/paso3.md`, junto con todo el análisis del paso 3.
-      Falta revisar los números de sección del paper contra el PDF.
+      En `labs/lab2-one-size/evidence/paso3.md`, junto con todo el análisis del paso 3.
 
 ---
 
 ## Cierre (todo el equipo)
 
-- [ ] Correr todo en la máquina acordada, desde un `resultados.jsonl` limpio, y regenerar `graficas.py`.
-- [ ] Unir las tres apreciaciones en la respuesta final (**máx. 2 páginas**), con al menos un número de
+- [x] Correr todo en la máquina acordada, desde un `resultados.jsonl` limpio, y regenerar `graficas.py`.
+- [x] Unir las tres apreciaciones en la respuesta final (**máx. 2 páginas**), con al menos un número de
       cada paso y las secciones del paper citadas.
-- [ ] Armar el PDF:
+- [x] Armar el PDF (`labs/lab2-one-size/REPORTE.tex` y `REPORTE.pdf`):
   1. Código de los TODO 1–5 + salidas `OK:`.
   2. `graficas.png` y `tabla.md` + máquina, SO, RAM y perfil.
   3. Plan de Postgres con el nodo dominante señalado y páginas leídas en MiB.

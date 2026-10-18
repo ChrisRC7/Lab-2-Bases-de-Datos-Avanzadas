@@ -384,18 +384,20 @@ en un motor relacional y en uno clave-valor, con tres cargas de trabajo distinta
 
 \textbf{1. Ningún motor gana todas las cargas de trabajo.} En el paso 1 gana Postgres: cargó el mes
 completo a 165\,323 filas/s, 8,6 veces más rápido que Valkey (19\,141 filas/s), y cada viaje ocupa 181 B
-en disco contra 549 B en RAM, 3,0 veces menos. En el paso 2 también gana Postgres, por 81× (punto 2). En
+en disco contra 549 B en RAM, 3,0 veces menos. En el paso 2 también gana Postgres, por 81×, porque tiene la primitiva de agregación que a Valkey le
+falta (sección 4.2, punto 2). En
 el paso 3 gana Valkey: el update por llave le toma 0,26 ms contra 2,28 ms de Postgres (8,8×), y en el
 feed \texttt{valkey\_pipeline} procesa 51\,040 mensajes/s, 1,7 veces más que la mejor variante de
-Postgres (\texttt{postgres\_lote}, 29\,792) y 105 veces más que un commit por mensaje (486). La lectura
-por llave queda casi empatada (0,32 contra 0,34 ms).
+Postgres (\texttt{postgres\_lote}, 29\,792) y 105 veces más que un commit por mensaje (486), porque procesa
+el mensaje sin guardarlo primero, que es el procesamiento inbound de la sección 4.1. La lectura por llave
+queda casi empatada (0,32 contra 0,34 ms).
 
 Los números también muestran las limitantes de Valkey. Todo tiene que caber en RAM: el mes completo
 necesitaría 5\,714 MiB, que no caben en los 4 GB que tiene asignados, y un año serían unos 67 GiB contra
 22 GiB de disco en Postgres. No tiene tipos ni esquema, así que guarda todo como texto y repite los 19
 nombres de campo en cada viaje. No tiene \texttt{GROUP BY}. Y su ventaja en el paso 3 depende de no
 escribir a disco: con \texttt{appendfsync always} baja a 240 mensajes/s. Cada motor gana donde su diseño
-calza con la carga.
+calza con la carga, que es la idea central del paper (secciones 1 y 5).
 
 \textbf{2. Que Valkey pierda el \texttt{GROUP BY} no refuta el argumento del data warehouse.} En el paso
 2 Postgres respondió el \texttt{GROUP BY payment\_type} sobre el mismo millón de viajes en 171 ms y Valkey

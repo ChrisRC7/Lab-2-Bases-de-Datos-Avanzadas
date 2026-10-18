@@ -1,29 +1,29 @@
-Finalize GroupAggregate  (cost=292188.54..292189.60 rows=4 width=42) (actual time=1611.184..1613.992 rows=5 loops=1)
+Finalize GroupAggregate  (cost=292188.85..292189.91 rows=4 width=42) (actual time=1436.467..1443.935 rows=5 loops=1)
   Group Key: payment_type
   Buffers: shared hit=14 read=211656
-  ->  Gather Merge  (cost=292188.54..292189.47 rows=8 width=42) (actual time=1611.169..1613.970 rows=13 loops=1)
+  ->  Gather Merge  (cost=292188.85..292189.78 rows=8 width=42) (actual time=1436.392..1443.842 rows=13 loops=1)
         Workers Planned: 2
         Workers Launched: 2
         Buffers: shared hit=14 read=211656
-        ->  Sort  (cost=291188.52..291188.53 rows=4 width=42) (actual time=1600.977..1600.978 rows=4 loops=3)
+        ->  Sort  (cost=291188.82..291188.83 rows=4 width=42) (actual time=1420.062..1420.063 rows=4 loops=3)
               Sort Key: payment_type
               Sort Method: quicksort  Memory: 25kB
               Buffers: shared hit=14 read=211656
               Worker 0:  Sort Method: quicksort  Memory: 25kB
               Worker 1:  Sort Method: quicksort  Memory: 25kB
-              ->  Partial HashAggregate  (cost=291188.43..291188.48 rows=4 width=42) (actual time=1600.960..1600.962 rows=4 loops=3)
+              ->  Partial HashAggregate  (cost=291188.73..291188.78 rows=4 width=42) (actual time=1420.039..1420.042 rows=4 loops=3)
                     Group Key: payment_type
                     Batches: 1  Memory Usage: 24kB
                     Buffers: shared read=211656
                     Worker 0:  Batches: 1  Memory Usage: 24kB
                     Worker 1:  Batches: 1  Memory Usage: 24kB
-                    ->  Parallel Seq Scan on trips  (cost=0.00..257103.10 rows=4544710 width=7) (actual time=0.322..1014.591 rows=3635619 loops=3)
+                    ->  Parallel Seq Scan on trips  (cost=0.00..257103.27 rows=4544728 width=7) (actual time=0.046..459.170 rows=3635619 loops=3)
                           Buffers: shared read=211656
 Planning:
   Buffers: shared hit=39 read=7
-Planning Time: 1.104 ms
+Planning Time: 1.424 ms
 JIT:
   Functions: 21
   Options: Inlining false, Optimization false, Expressions true, Deforming true
-  Timing: Generation 2.041 ms, Inlining 0.000 ms, Optimization 1.674 ms, Emission 15.313 ms, Total 19.028 ms
-Execution Time: 1615.569 ms
+  Timing: Generation 2.210 ms, Inlining 0.000 ms, Optimization 1.800 ms, Emission 22.603 ms, Total 26.613 ms
+Execution Time: 1445.133 ms

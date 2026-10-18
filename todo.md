@@ -50,19 +50,19 @@
 ## Persona 2 (Alisson) — Paso 2: Consulta de almacén (`analitica.py`) + evidencia
 
 ### Código
-- [ ] **TODO 3** — `agregar_lote(r, keys, sums, counts)`: leer `payment_type` y `fare_amount` con
+- [x] **TODO 3** — `agregar_lote(r, keys, sums, counts)`: leer `payment_type` y `fare_amount` con
       `HMGET` en un pipeline y acumular en `sums` y `counts` (equivalente manual al `HashAggregate`).
-- [ ] Correr `analitica.py` y guardar la salida con las líneas `OK:`.
+- [x] Correr `analitica.py` y guardar la salida con las líneas `OK:`.
 
 ### Análisis para el informe
-- [ ] Leer `evidence/plan_olap_postgres.txt` de abajo hacia arriba:
-  - [ ] `Parallel Seq Scan on trips`: workers, filas por loop, tiempo.
-  - [ ] `Buffers: shared read=…` → convertir a MiB (× 8 KiB) y comparar con `disco_tabla` del paso 1.
-  - [ ] `Partial HashAggregate` y `Finalize GroupAggregate` (agregación en dos fases).
-  - [ ] Señalar el **nodo que más tiempo consume** y relacionarlo con el row-store (lee las 20 columnas para usar 2).
-- [ ] Reportar la pregunta no anticipada (propina promedio por hora) y por qué el modelo relacional la responde fácil.
-- [ ] Generar gráficas y tabla: `graficas.py` → `evidence/graficas.png` y `evidence/tabla.md`.
-- [ ] **Ensayo final:** redactar la apreciación **«Que Valkey pierda el `GROUP BY` no refuta el argumento
+- [x] Leer `evidence/plan_olap_postgres.txt` de abajo hacia arriba:
+  - [x] `Parallel Seq Scan on trips`: workers, filas por loop, tiempo.
+  - [x] `Buffers: shared read=…` → convertir a MiB (× 8 KiB) y comparar con `disco_tabla` del paso 1.
+  - [x] `Partial HashAggregate` y `Finalize GroupAggregate` (agregación en dos fases).
+  - [x] Señalar el **nodo que más tiempo consume** y relacionarlo con el row-store (lee las 20 columnas para usar 2).
+- [x] Reportar la pregunta no anticipada (propina promedio por hora) y por qué el modelo relacional la responde fácil.
+- [x] Generar gráficas y tabla: `graficas.py` → `evidence/graficas.png` y `evidence/tabla.md`.
+- [x] **Ensayo final:** redactar la apreciación **«Que Valkey pierda el `GROUP BY` no refuta el argumento
       del data warehouse»** (no se prueba un column-store sino un key-value sin primitiva de agregación),
       usando el plan de Postgres y citando la sección del paper.
 

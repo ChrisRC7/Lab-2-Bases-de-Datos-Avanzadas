@@ -1,0 +1,35 @@
+{"ts": "2026-10-18T02:02:47", "paso": "1-carga", "motor": "postgres", "metrica": "filas", "valor": 10906858, "unidad": "filas"}
+{"ts": "2026-10-18T02:02:47", "paso": "1-carga", "motor": "postgres", "metrica": "tiempo_copy", "valor": 65.972846, "unidad": "s"}
+{"ts": "2026-10-18T02:02:47", "paso": "1-carga", "motor": "postgres", "metrica": "filas_por_s", "valor": 165323.442663, "unidad": "filas/s"}
+{"ts": "2026-10-18T02:02:57", "paso": "1-carga", "motor": "postgres", "metrica": "tiempo_indice_pk", "valor": 9.982095, "unidad": "s"}
+{"ts": "2026-10-18T02:03:01", "paso": "1-carga", "motor": "postgres", "metrica": "disco_tabla", "valor": 1653.5625, "unidad": "MiB"}
+{"ts": "2026-10-18T02:03:01", "paso": "1-carga", "motor": "postgres", "metrica": "disco_indices", "valor": 233.65625, "unidad": "MiB"}
+{"ts": "2026-10-18T02:03:01", "paso": "1-carga", "motor": "postgres", "metrica": "disco_total", "valor": 1887.703125, "unidad": "MiB"}
+{"ts": "2026-10-18T02:03:01", "paso": "1-carga", "motor": "postgres", "metrica": "bytes_por_fila", "valor": 181.482164, "unidad": "B/fila"}
+{"ts": "2026-10-18T02:03:52", "paso": "1-carga", "motor": "valkey", "metrica": "filas", "valor": 1000000, "unidad": "filas"}
+{"ts": "2026-10-18T02:03:52", "paso": "1-carga", "motor": "valkey", "metrica": "tiempo_carga", "valor": 52.244758, "unidad": "s"}
+{"ts": "2026-10-18T02:03:52", "paso": "1-carga", "motor": "valkey", "metrica": "filas_por_s", "valor": 19140.676105, "unidad": "filas/s"}
+{"ts": "2026-10-18T02:03:52", "paso": "1-carga", "motor": "valkey", "metrica": "ram_usada", "valor": 523.906281, "unidad": "MiB"}
+{"ts": "2026-10-18T02:03:52", "paso": "1-carga", "motor": "valkey", "metrica": "bytes_por_fila", "valor": 549.355552, "unidad": "B/fila"}
+{"ts": "2026-10-18T02:03:52", "paso": "1-carga", "motor": "valkey", "metrica": "ram_extrapolada_total", "valor": 5714.171407, "unidad": "MiB", "nota": "extrapolado a 10906858 filas"}
+{"ts": "2026-10-18T02:04:08", "paso": "2-olap", "motor": "valkey", "metrica": "agregado_en_cliente", "valor": 13882.670087, "unidad": "ms", "filas": 1000000}
+{"ts": "2026-10-18T02:04:11", "paso": "2-olap", "motor": "postgres", "metrica": "explain_execution_time", "valor": 1445.133, "unidad": "ms", "filas": 10906858}
+{"ts": "2026-10-18T02:04:16", "paso": "2-olap", "motor": "postgres", "metrica": "mediana_completa", "valor": 1064.853966, "unidad": "ms", "filas": 10906858}
+{"ts": "2026-10-18T02:04:17", "paso": "2-olap", "motor": "postgres", "metrica": "mediana_subconjunto", "valor": 170.835735, "unidad": "ms", "filas": 1000000}
+{"ts": "2026-10-18T02:04:18", "paso": "2-olap", "motor": "postgres", "metrica": "pregunta_nueva", "valor": 1329.446646, "unidad": "ms", "filas": 10906858}
+{"ts": "2026-10-18T02:04:22", "paso": "3a-puntual", "motor": "postgres", "metrica": "lectura_por_llave_p50", "valor": 0.340837, "unidad": "ms"}
+{"ts": "2026-10-18T02:04:28", "paso": "3a-puntual", "motor": "postgres", "metrica": "update_por_llave_p50", "valor": 2.279974, "unidad": "ms"}
+{"ts": "2026-10-18T02:04:28", "paso": "3a-puntual", "motor": "valkey", "metrica": "lectura_por_llave_p50", "valor": 0.315941, "unidad": "ms"}
+{"ts": "2026-10-18T02:04:29", "paso": "3a-puntual", "motor": "valkey", "metrica": "update_por_llave_p50", "valor": 0.258139, "unidad": "ms"}
+{"ts": "2026-10-18T02:04:49", "paso": "3b-feed", "motor": "postgres_commit_por_mensaje", "metrica": "mensajes_por_s", "valor": 485.706986, "unidad": "msg/s", "mensajes": 10000}
+{"ts": "2026-10-18T02:04:49", "paso": "3b-feed", "motor": "postgres_commit_por_mensaje", "metrica": "leer_respuesta", "valor": 0.920827, "unidad": "ms"}
+{"ts": "2026-10-18T02:04:54", "paso": "3b-feed", "motor": "postgres_commit_asincrono", "metrica": "mensajes_por_s", "valor": 1847.409065, "unidad": "msg/s", "mensajes": 10000}
+{"ts": "2026-10-18T02:04:54", "paso": "3b-feed", "motor": "postgres_commit_asincrono", "metrica": "leer_respuesta", "valor": 0.565736, "unidad": "ms"}
+{"ts": "2026-10-18T02:04:55", "paso": "3b-feed", "motor": "postgres_lote", "metrica": "mensajes_por_s", "valor": 29792.324942, "unidad": "msg/s", "mensajes": 10000}
+{"ts": "2026-10-18T02:04:55", "paso": "3b-feed", "motor": "postgres_lote", "metrica": "leer_respuesta", "valor": 1.166168, "unidad": "ms"}
+{"ts": "2026-10-18T02:04:59", "paso": "3b-feed", "motor": "valkey_por_mensaje", "metrica": "mensajes_por_s", "valor": 2336.417258, "unidad": "msg/s", "mensajes": 10000}
+{"ts": "2026-10-18T02:04:59", "paso": "3b-feed", "motor": "valkey_por_mensaje", "metrica": "leer_respuesta", "valor": 0.663883, "unidad": "ms"}
+{"ts": "2026-10-18T02:05:39", "paso": "3b-feed", "motor": "valkey_aof_always", "metrica": "mensajes_por_s", "valor": 239.967614, "unidad": "msg/s", "mensajes": 10000}
+{"ts": "2026-10-18T02:05:39", "paso": "3b-feed", "motor": "valkey_aof_always", "metrica": "leer_respuesta", "valor": 0.780333, "unidad": "ms"}
+{"ts": "2026-10-18T02:05:39", "paso": "3b-feed", "motor": "valkey_pipeline", "metrica": "mensajes_por_s", "valor": 51040.469672, "unidad": "msg/s", "mensajes": 10000}
+{"ts": "2026-10-18T02:05:39", "paso": "3b-feed", "motor": "valkey_pipeline", "metrica": "leer_respuesta", "valor": 0.895252, "unidad": "ms"}

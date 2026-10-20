@@ -1,0 +1,19 @@
+Postgres: COPY de todo el archivo
+  [1-carga] postgres                     filas                      10,906,858.000 filas
+  [1-carga] postgres                     tiempo_copy                        65.973 s
+  [1-carga] postgres                     filas_por_s                   165,323.443 filas/s
+  [1-carga] postgres                     tiempo_indice_pk                    9.982 s
+  OK: TODO 1: total >= heap + índices, y ambos > 0
+  [1-carga] postgres                     disco_tabla                     1,653.562 MiB
+  [1-carga] postgres                     disco_indices                     233.656 MiB
+  [1-carga] postgres                     disco_total                     1,887.703 MiB
+  [1-carga] postgres                     bytes_por_fila                    181.482 B/fila
+Valkey: HSET de 1,000,000 filas
+  OK: TODO 2: Valkey tiene 1,000,000 llaves trip:*
+  OK: TODO 2: el último viaje tiene el campo fare_amount
+  [1-carga] valkey                       filas                       1,000,000.000 filas
+  [1-carga] valkey                       tiempo_carga                       52.245 s
+  [1-carga] valkey                       filas_por_s                    19,140.676 filas/s
+  [1-carga] valkey                       ram_usada                         523.906 MiB
+  [1-carga] valkey                       bytes_por_fila                    549.356 B/fila
+  [1-carga] valkey                       ram_extrapolada_total           5,714.171 MiB

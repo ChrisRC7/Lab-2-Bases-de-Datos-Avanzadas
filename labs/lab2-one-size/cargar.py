@@ -54,7 +54,11 @@ def medir_espacio_postgres(cur) -> tuple[int, int, int]:
     #   b) Lea la única fila con cur.fetchone(); es una tupla de tres enteros.
     #   c) Devuélvala tal cual. Las unidades son bytes; cargar_postgres() la pasa a MiB.
     # Verificación automática: total >= heap + índices, y ambos > 0.
-    raise NotImplementedError("TODO 1: medir_espacio_postgres()")
+    cur.execute(
+        "SELECT pg_relation_size('trips'), pg_indexes_size('trips'),"
+        " pg_total_relation_size('trips')"
+    )
+    return cur.fetchone()
 
 
 def cargar_postgres(limit: int | None) -> int:
@@ -121,7 +125,14 @@ def cargar_valkey(r, limit: int) -> int:
     #   f) Devuelva cuántas filas guardó.
     # Verificación automática: dbsize() == limit y el último viaje tiene fare_amount.
     # Para pensar: ¿qué pasaría con el tiempo de carga si llamara r.hset() directo?
-    raise NotImplementedError("TODO 2: cargar_valkey()")
+    pipe = r.pipeline(transaction=False)
+    n = 0
+    for n, row in enumerate(iter_rows(limit), start=1):
+        pipe.hset(f"trip:{n}", mapping=dict(zip(CSV_COLUMNS, row)))
+        if n % PIPELINE_BATCH == 0:
+            pipe.execute()
+    pipe.execute()
+    return n
 
 
 def medir_valkey(limit: int, pg_rows: int) -> None:
